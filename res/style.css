@@ -31,7 +31,7 @@ layoutCol {
 
 bitmapTitle {
 	width: 380;
-	align: center top;
+	align: center bottom;
 }
 
 layoutCol.title {
