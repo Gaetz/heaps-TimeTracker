@@ -15,7 +15,7 @@ container {
 layoutLine {
 	width: 800;
 	layout: horizontal;
-	background: #353132;
+	background: #231f20;
 	padding: 10;
 	margin-bottom:10;
 }
@@ -34,9 +34,14 @@ bitmapTitle {
 	align: center top;
 }
 
+layoutCol.title {
+	content-align: left top;
+	width: 380;
+}
+
 layoutCol.date {
 	content-align: right top;
-	width: 380;
+	width: 320;
 }
 
 title {

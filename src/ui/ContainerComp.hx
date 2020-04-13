@@ -7,10 +7,15 @@ import utils.DateUtils;
 class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 
 	var font = Main.titleFont;
+	inline static final timeTracker = "Time Tracker";
 
 	static var SRC = <container>
 		<layoutLine(70) class="titleLine">
-			<bitmapTitle(" Rufflerim", Res.logo.toTile()) id="logoTitle"/>
+			<bitmap src={Res.logo.toTile()} />
+			<layoutCol(align) class="title">
+				<title("Rufflerim", font) id="logoTitle"/>
+				<text text={timeTracker} />
+			</layoutCol>
 			<layoutCol(align) class="date">
 				<title("", font) public id="date" class="date" />
 				<text text={"Week " + Std.string(DateUtils.getWeekOfYear())} />
@@ -39,7 +44,7 @@ class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 			<button public id="btn1" />
 			<button public id="btn2" />
 			<text text="blop" />
-
+			<text text="blop" />
 		</layoutLine>
 
 	</container>;
