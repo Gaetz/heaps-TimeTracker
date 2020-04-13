@@ -8,13 +8,51 @@ view.mybox {
 }
 
 container {
-	max-width: 300;
+	width: 800;
 	layout: vertical;
+}
+
+layoutLine {
+	width: 800;
+	layout: horizontal;
+	background: #353132;
+	padding: 10;
+	margin-bottom:10;
+}
+
+layoutLine.titleLine {
+	align: center top;
+}
+
+layoutCol {
+	width: 266;
+	layout: vertical;
+}
+
+bitmapTitle {
+	width: 380;
+	align: center top;
+}
+
+layoutCol.date {
+	content-align: right top;
+	width: 380;
+}
+
+title {
+	color: white;
+}
+
+title.titleText {
+	content-align: left center;
+}
+
+title.date {
+	content-align: right;
 }
 
 button {
 	background: #333;
-	fill-width: true;
 	height: 30;
 }
 

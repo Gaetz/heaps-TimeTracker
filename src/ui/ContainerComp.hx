@@ -1,18 +1,56 @@
 package ui;
 
+import hxd.Res;
+import utils.DateUtils;
+
 @:uiComp("container")
 class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 
+	var font = Main.titleFont;
+
 	static var SRC = <container>
-		<view(align,[]) id="view"/>
-		<button public id="btn"/>
-		<button public id="btn1"/>
-		<button public id="btn2"/>
+		<layoutLine(70) class="titleLine">
+			<bitmapTitle(" Rufflerim", Res.logo.toTile()) id="logoTitle"/>
+			<layoutCol(align) class="date">
+				<title("", font) public id="date" class="date" />
+				<text text={"Week " + Std.string(DateUtils.getWeekOfYear())} />
+			</layoutCol>
+		</layoutLine>
+
+		<layoutLine(200)>
+			<layoutCol(align)>
+				<view(align,[]) id="view"/>
+				<text text="blop" />
+			</layoutCol>
+
+			<layoutCol(align)>
+				<button public id="btn" />
+				<text text="blop" />
+			</layoutCol>
+
+			<layoutCol(align)>
+				<text text="blop" />
+				<text text="blop" />
+			</layoutCol>
+		</layoutLine>
+
+		<layoutLine(100)>
+			<title("Today", font) />
+			<button public id="btn1" />
+			<button public id="btn2" />
+			<text text="blop" />
+
+		</layoutLine>
+
 	</container>;
+
+
 
 	public function new(align:h2d.Flow.FlowAlign, ?parent) {
 		super(parent);
 		initComponent();
+
 	}
 
 }
+
