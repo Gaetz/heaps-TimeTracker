@@ -1,37 +1,31 @@
 
-/*
 import dat.Data;
 import hxd.Res;
-
-class Main extends hxd.App {
-
-    override function init() {
-        Res.initEmbed();
-        var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
-
-		Data.load(haxe.Resource.getString("db/timeTracking.cdb"));
-        tf.text = Data.Projects.get(tdad).Name;
-    }
-
-    static function main() {
-        new Main();
-    }
-}
-*/
-
 import ui.*;
 
-//PARAM=-lib domkit
 class Main extends hxd.App {
 
 	var center : h2d.Flow;
 	var style = null;
+	var root : ContainerComp;
 
-	override function init() {
+    override function init() {
+        var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
+		tf.text = Data.Projects.get(tdad).Name;
+
+		initUI();
+		initStyle();
+	}
+	
+	/**
+	 * Init UI elements
+	 */
+	function initUI() {
+		// Flow
 		center = new h2d.Flow(s2d);
 		center.horizontalAlign = center.verticalAlign = Middle;
 		onResize();
-		var root = new ContainerComp(Right, center);
+		root = new ContainerComp(Right, center);
 
 		// Override
 		root.btn.label = "Button";
@@ -44,7 +38,9 @@ class Main extends hxd.App {
 		root.btn2.onClick = function() {
 			root.btn.dom.removeClass("highlight");
 		}
+	}
 
+	function initStyle() {
 		style = new h2d.domkit.Style();
 		style.load(hxd.Res.style);
 		style.addObject(root);
@@ -59,14 +55,9 @@ class Main extends hxd.App {
 		style.sync();
 	}
 
-	static function main() {
-		#if hl
-		hxd.res.Resource.LIVE_UPDATE = true;
-		hxd.Res.initLocal();
-		#else
-		hxd.Res.initEmbed();
-		#end
-		new Main();
-	}
-
+    static function main() {
+		Res.initEmbed();
+		Data.load(haxe.Resource.getString("db/timeTracking.cdb"));
+        new Main();
+    }
 }

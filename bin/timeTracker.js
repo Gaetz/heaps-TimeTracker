@@ -320,29 +320,42 @@ $hxClasses["Main"] = Main;
 Main.__name__ = "Main";
 Main.main = function() {
 	hxd_Res.set_loader(new hxd_res_Loader(new hxd_fs_EmbedFileSystem(haxe_Unserializer.run("oy9:style.csstg"))));
+	dat_Data.load(haxe_Resource.getString("db/timeTracking.cdb"));
 	new Main();
 };
 Main.__super__ = hxd_App;
 Main.prototype = $extend(hxd_App.prototype,{
 	center: null
 	,style: null
+	,root: null
 	,init: function() {
+		var tf = new h2d_Text(hxd_res_DefaultFont.get(),this.s2d);
+		var _this = dat_Data.Projects.byId;
+		var key = "tdad";
+		tf.set_text((__map_reserved[key] != null ? _this.getReserved(key) : _this.h[key]).Name);
+		this.initUI();
+		this.initStyle();
+	}
+	,initUI: function() {
+		var _gthis = this;
 		this.center = new h2d_Flow(this.s2d);
 		this.center.set_horizontalAlign(this.center.set_verticalAlign(h2d_FlowAlign.Middle));
 		this.onResize();
-		var root = new ui_ContainerComp(h2d_FlowAlign.Right,this.center);
-		root.btn.set_label("Button");
-		root.btn1.set_label("Highlight ON");
-		root.btn2.labelTxt.set_text("Highlight OFF");
-		root.btn1.onClick = function() {
-			root.btn.dom.addClass("highlight");
+		this.root = new ui_ContainerComp(h2d_FlowAlign.Right,this.center);
+		this.root.btn.set_label("Button");
+		this.root.btn1.set_label("Highlight ON");
+		this.root.btn2.labelTxt.set_text("Highlight OFF");
+		this.root.btn1.onClick = function() {
+			_gthis.root.btn.dom.addClass("highlight");
 		};
-		root.btn2.onClick = function() {
-			root.btn.dom.removeClass("highlight");
+		this.root.btn2.onClick = function() {
+			_gthis.root.btn.dom.removeClass("highlight");
 		};
+	}
+	,initStyle: function() {
 		this.style = new h2d_domkit_Style();
 		this.style.load(hxd_Res.get_loader().loadCache("style.css",hxd_res_Resource));
-		this.style.addObject(root);
+		this.style.addObject(this.root);
 	}
 	,onResize: function() {
 		this.center.set_minWidth(this.center.set_maxWidth(this.s2d.width));
@@ -524,6 +537,9 @@ StringTools.htmlEscape = function(s,quotes) {
 		}
 	}
 	return buf_b;
+};
+StringTools.htmlUnescape = function(s) {
+	return s.split("&gt;").join(">").split("&lt;").join("<").split("&quot;").join("\"").split("&#039;").join("'").split("&amp;").join("&");
 };
 StringTools.startsWith = function(s,start) {
 	if(s.length >= start.length) {
@@ -931,6 +947,610 @@ cdb__$Data_TileMode_$Impl_$.ofString = function(s) {
 cdb__$Data_TileMode_$Impl_$.toString = function(this1) {
 	return this1;
 };
+var cdb_LocField = $hxEnums["cdb.LocField"] = { __ename__ : true, __constructs__ : ["LName","LSub","LSingle"]
+	,LName: ($_=function(c) { return {_hx_index:0,c:c,__enum__:"cdb.LocField",toString:$estr}; },$_.__params__ = ["c"],$_)
+	,LSub: ($_=function(c,s,e) { return {_hx_index:1,c:c,s:s,e:e,__enum__:"cdb.LocField",toString:$estr}; },$_.__params__ = ["c","s","e"],$_)
+	,LSingle: ($_=function(c,e) { return {_hx_index:2,c:c,e:e,__enum__:"cdb.LocField",toString:$estr}; },$_.__params__ = ["c","e"],$_)
+};
+cdb_LocField.__empty_constructs__ = [];
+var cdb_Lang = function(root) {
+	this.root = root;
+};
+$hxClasses["cdb.Lang"] = cdb_Lang;
+cdb_Lang.__name__ = "cdb.Lang";
+cdb_Lang.prototype = {
+	root: null
+	,onMissing: function(s) {
+		haxe_Log.trace(s,{ fileName : "cdb/Lang.hx", lineNumber : 21, className : "cdb.Lang", methodName : "onMissing"});
+	}
+	,getSub: function(s,c) {
+		return this.getSheet(s.name + "@" + c.name);
+	}
+	,getSheet: function(name) {
+		var _g = 0;
+		var _g1 = this.root.sheets;
+		while(_g < _g1.length) {
+			var s = _g1[_g];
+			++_g;
+			if(s.name == name) {
+				return s;
+			}
+		}
+		return null;
+	}
+	,makeLocField: function(c,s) {
+		switch(c.type._hx_index) {
+		case 1:
+			if(c.kind == "localizable") {
+				return cdb_LocField.LName(c);
+			} else {
+				return null;
+			}
+			break;
+		case 8:case 17:
+			var ssub = this.getSub(s,c);
+			var fl = this.makeSheetFields(ssub);
+			if(fl.length == 0) {
+				return null;
+			}
+			return cdb_LocField.LSub(c,ssub,fl);
+		default:
+			return null;
+		}
+	}
+	,makeSheetFields: function(s) {
+		var fields = [];
+		var _g = 0;
+		var _g1 = s.columns;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			var f = this.makeLocField(c,s);
+			if(f != null) {
+				if(f._hx_index == 1) {
+					var _g11 = f.s;
+					var fl = f.e;
+					var c1 = f.c;
+					if(c1.type == cdb_ColumnType.TProperties) {
+						var _g2 = 0;
+						while(_g2 < fl.length) {
+							var f1 = fl[_g2];
+							++_g2;
+							fields.push(cdb_LocField.LSingle(c1,f1));
+						}
+					} else {
+						fields.push(f);
+					}
+				} else {
+					fields.push(f);
+				}
+			}
+		}
+		return fields;
+	}
+	,apply: function(xml) {
+		var x = Xml.parse(xml).firstElement();
+		var xsheets = new haxe_ds_StringMap();
+		var e = x.elements();
+		while(e.hasNext()) {
+			var e1 = e.next();
+			var key = e1.get("name");
+			if(__map_reserved[key] != null) {
+				xsheets.setReserved(key,e1);
+			} else {
+				xsheets.h[key] = e1;
+			}
+		}
+		var out = new haxe_ds_StringMap();
+		var _g = 0;
+		var _g1 = this.root.sheets;
+		while(_g < _g1.length) {
+			var s = _g1[_g];
+			++_g;
+			if(s.props.hide) {
+				continue;
+			}
+			var key1 = s.name;
+			var x1 = __map_reserved[key1] != null ? xsheets.getReserved(key1) : xsheets.h[key1];
+			if(x1 == null) {
+				if(s.lines.length > 0 && this.makeSheetFields(s).length > 0) {
+					this.onMissing("Missing sheet " + s.name);
+				}
+				continue;
+			}
+			var path = [s.name];
+			var outLines = [];
+			this.applySheet(path,s,this.makeSheetFields(s),s.lines,x1,outLines);
+			var key2 = s.name;
+			if(__map_reserved[key2] != null ? out.existsReserved(key2) : out.h.hasOwnProperty(key2)) {
+				throw new js__$Boot_HaxeError("assert");
+			}
+			var key3 = s.name;
+			if(__map_reserved[key3] != null) {
+				out.setReserved(key3,outLines);
+			} else {
+				out.h[key3] = outLines;
+			}
+		}
+		return out;
+	}
+	,'delete': function(l) {
+		var _g = 0;
+		var _g1 = this.root.sheets;
+		while(_g < _g1.length) {
+			var s = _g1[_g];
+			++_g;
+			var key = s.name;
+			var sdel = __map_reserved[key] != null ? l.getReserved(key) : l.h[key];
+			if(sdel == null) {
+				continue;
+			}
+			this.deleteSheet(s,this.makeSheetFields(s),sdel,s.lines);
+		}
+	}
+	,deleteSheet: function(s,loc,del,lines) {
+		var inf = this.getSheetHelpers(s);
+		if(inf.id == null) {
+			var _g = 0;
+			var _g1 = lines.length;
+			while(_g < _g1) {
+				var i = _g++;
+				if(del[i] != null && lines[i] != null) {
+					this.deleteObj(loc,del[i],lines[i]);
+				}
+			}
+		} else {
+			var byID = new haxe_ds_StringMap();
+			var _g2 = 0;
+			while(_g2 < del.length) {
+				var d = del[_g2];
+				++_g2;
+				var key = Reflect.field(d,inf.id);
+				if(__map_reserved[key] != null) {
+					byID.setReserved(key,d);
+				} else {
+					byID.h[key] = d;
+				}
+			}
+			var _g11 = 0;
+			while(_g11 < lines.length) {
+				var o = lines[_g11];
+				++_g11;
+				var id = Reflect.field(o,inf.id);
+				if(id == null || !(__map_reserved[id] != null ? byID.existsReserved(id) : byID.h.hasOwnProperty(id))) {
+					continue;
+				}
+				this.deleteObj(loc,__map_reserved[id] != null ? byID.getReserved(id) : byID.h[id],o);
+			}
+		}
+	}
+	,deleteObj: function(loc,del,obj) {
+		var _g = 0;
+		while(_g < loc.length) {
+			var l = loc[_g];
+			++_g;
+			switch(l._hx_index) {
+			case 0:
+				var c = l.c;
+				if(Object.prototype.hasOwnProperty.call(del,c.name)) {
+					obj[c.name] = "";
+				}
+				break;
+			case 1:
+				var el = l.e;
+				var s = l.s;
+				var c1 = l.c;
+				var ol = Reflect.field(obj,c1.name);
+				var dl = Reflect.field(del,c1.name);
+				if(ol == null || dl == null) {
+					continue;
+				}
+				this.deleteSheet(s,el,dl,ol);
+				break;
+			case 2:
+				var e = l.e;
+				var c2 = l.c;
+				var o = Reflect.field(obj,c2.name);
+				var d = Reflect.field(del,c2.name);
+				if(o == null || d == null) {
+					continue;
+				}
+				this.deleteObj([e],d,o);
+				break;
+			}
+		}
+	}
+	,applySheet: function(path,s,fields,objects,x,out) {
+		var inf = this.getSheetHelpers(s);
+		if(inf.id == null) {
+			var byIndex = [];
+			if(x != null) {
+				var e = x.elements();
+				while(e.hasNext()) {
+					var e1 = e.next();
+					var m = new haxe_ds_StringMap();
+					var e2 = e1.elements();
+					while(e2.hasNext()) {
+						var e3 = e2.next();
+						if(e3.nodeType != Xml.Element) {
+							throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + _$Xml_XmlType_$Impl_$.toString(e3.nodeType));
+						}
+						var key = e3.nodeName;
+						if(__map_reserved[key] != null) {
+							m.setReserved(key,e3);
+						} else {
+							m.h[key] = e3;
+						}
+					}
+					if(e1.nodeType != Xml.Element) {
+						throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + _$Xml_XmlType_$Impl_$.toString(e1.nodeType));
+					}
+					byIndex[Std.parseInt(e1.nodeName)] = m;
+				}
+			}
+			var _g = 0;
+			var _g1 = objects.length;
+			while(_g < _g1) {
+				var i = _g++;
+				var outSub = { };
+				var o = objects[i];
+				var _g2 = 0;
+				while(_g2 < fields.length) {
+					var f = fields[_g2];
+					++_g2;
+					path.push("[" + i + "]");
+					this.applyRec(path,f,o,byIndex[i],outSub);
+					path.pop();
+				}
+				if(Reflect.fields(outSub).length > 0) {
+					var _g11 = 0;
+					var _g21 = inf.helpers;
+					while(_g11 < _g21.length) {
+						var c = _g21[_g11];
+						++_g11;
+						var hid = Reflect.field(o,c.c.name);
+						if(hid != null) {
+							outSub[c.c.name] = hid;
+						}
+					}
+					out[i] = outSub;
+				}
+			}
+		} else {
+			var byID = new haxe_ds_StringMap();
+			if(x != null) {
+				var e4 = x.elements();
+				while(e4.hasNext()) {
+					var e5 = e4.next();
+					var m1 = new haxe_ds_StringMap();
+					var e6 = e5.elements();
+					while(e6.hasNext()) {
+						var e7 = e6.next();
+						if(e7.nodeType != Xml.Element) {
+							throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + _$Xml_XmlType_$Impl_$.toString(e7.nodeType));
+						}
+						var key1 = e7.nodeName;
+						if(__map_reserved[key1] != null) {
+							m1.setReserved(key1,e7);
+						} else {
+							m1.h[key1] = e7;
+						}
+					}
+					if(e5.nodeType != Xml.Element) {
+						throw new js__$Boot_HaxeError("Bad node type, expected Element but found " + _$Xml_XmlType_$Impl_$.toString(e5.nodeType));
+					}
+					var key2 = e5.nodeName;
+					if(__map_reserved[key2] != null) {
+						byID.setReserved(key2,m1);
+					} else {
+						byID.h[key2] = m1;
+					}
+				}
+			}
+			var _g3 = 0;
+			while(_g3 < objects.length) {
+				var o1 = objects[_g3];
+				++_g3;
+				var outSub1 = { };
+				var id = Reflect.field(o1,inf.id);
+				path.push(id);
+				var _g4 = 0;
+				while(_g4 < fields.length) {
+					var f1 = fields[_g4];
+					++_g4;
+					this.applyRec(path,f1,o1,__map_reserved[id] != null ? byID.getReserved(id) : byID.h[id],outSub1);
+				}
+				path.pop();
+				if(Reflect.fields(outSub1).length > 0) {
+					outSub1[inf.id] = id;
+					out.push(outSub1);
+				}
+			}
+		}
+	}
+	,applyRec: function(path,f,o,data,out) {
+		switch(f._hx_index) {
+		case 0:
+			var c = f.c;
+			var v;
+			if(data == null) {
+				v = null;
+			} else {
+				var key = c.name;
+				v = __map_reserved[key] != null ? data.getReserved(key) : data.h[key];
+			}
+			if(v != null) {
+				var field = c.name;
+				if(v.nodeType != Xml.Document && v.nodeType != Xml.Element) {
+					throw new js__$Boot_HaxeError("Invalid nodeType " + _$Xml_XmlType_$Impl_$.toString(v.nodeType));
+				}
+				var this1 = v;
+				o[field] = StringTools.htmlUnescape(haxe_xml__$Access_Access_$Impl_$.get_innerHTML(this1));
+			} else {
+				var v1 = Reflect.field(o,c.name);
+				if(v1 != null && v1 != "") {
+					path.push(c.name);
+					out[c.name] = v1;
+					this.onMissing("Missing " + path.join("."));
+					path.pop();
+				}
+			}
+			break;
+		case 1:
+			var fl = f.e;
+			var s = f.s;
+			var c1 = f.c;
+			var v2 = Reflect.field(o,c1.name);
+			if(v2 == null) {
+				return;
+			}
+			path.push(c1.name);
+			var outSub = [];
+			var tmp;
+			if(data == null) {
+				tmp = null;
+			} else {
+				var key1 = c1.name;
+				tmp = __map_reserved[key1] != null ? data.getReserved(key1) : data.h[key1];
+			}
+			this.applySheet(path,s,fl,v2,tmp,outSub);
+			if(outSub.length > 0) {
+				out[c1.name] = outSub;
+			}
+			path.pop();
+			break;
+		case 2:
+			var f1 = f.e;
+			var c2 = f.c;
+			var v3 = Reflect.field(o,c2.name);
+			if(v3 == null) {
+				return;
+			}
+			path.push(c2.name);
+			var outSub1 = { };
+			var tmp1;
+			if(data == null) {
+				tmp1 = null;
+			} else {
+				var _g = new haxe_ds_StringMap();
+				var e = data.keys();
+				while(e.hasNext()) {
+					var e1 = e.next();
+					if(StringTools.startsWith(e1,c2.name + ".")) {
+						var key2 = HxOverrides.substr(e1,c2.name.length + 1,null);
+						var value = __map_reserved[e1] != null ? data.getReserved(e1) : data.h[e1];
+						if(__map_reserved[key2] != null) {
+							_g.setReserved(key2,value);
+						} else {
+							_g.h[key2] = value;
+						}
+					}
+				}
+				tmp1 = _g;
+			}
+			this.applyRec(path,f1,v3,tmp1,outSub1);
+			path.pop();
+			if(Reflect.fields(outSub1).length > 0) {
+				out[c2.name] = outSub1;
+			}
+			break;
+		}
+	}
+	,buildXML: function(diff) {
+		var buf_b = "";
+		buf_b += "<cdb>\n";
+		var _g = 0;
+		var _g1 = this.root.sheets;
+		while(_g < _g1.length) {
+			var s = _g1[_g];
+			++_g;
+			if(s.props.hide) {
+				continue;
+			}
+			var locFields = this.makeSheetFields(s);
+			if(locFields.length == 0) {
+				continue;
+			}
+			var lines = this.getLines(s,diff);
+			if(lines.length == 0) {
+				continue;
+			}
+			buf_b += Std.string("\t<sheet name=\"" + s.name + "\">\n");
+			buf_b += Std.string(this.buildSheetXml(s,"\t\t",lines,locFields,diff));
+			buf_b += "\t</sheet>\n";
+		}
+		buf_b += "</cdb>\n";
+		return buf_b;
+	}
+	,getLines: function(s,diff) {
+		if(diff != null) {
+			var key = s.name;
+			var m = __map_reserved[key] != null ? diff.getReserved(key) : diff.h[key];
+			if(m == null) {
+				throw new js__$Boot_HaxeError("Missing diff for " + s.name);
+			}
+			return m;
+		}
+		return s.lines;
+	}
+	,getLocText: function(tabs,o,f,diff) {
+		switch(f._hx_index) {
+		case 0:
+			var c = f.c;
+			var v = Reflect.field(o,c.name);
+			return { name : c.name, value : v == null ? v : StringTools.htmlEscape(v)};
+		case 1:
+			var fl = f.e;
+			var ssub = f.s;
+			var c1 = f.c;
+			var v1 = Reflect.field(o,c1.name);
+			var content = this.buildSheetXml(ssub,tabs + "\t\t",v1 == null ? [] : v1,fl,diff);
+			return { name : c1.name, value : content};
+		case 2:
+			var f1 = f.e;
+			var c2 = f.c;
+			var v2 = this.getLocText(tabs,Reflect.field(o,c2.name),f1,diff);
+			return { name : c2.name + "." + v2.name, value : v2.value};
+		}
+	}
+	,getSheetHelpers: function(s) {
+		var id = null;
+		var helpers = [];
+		var _g = 0;
+		var _g1 = s.columns;
+		while(_g < _g1.length) {
+			var c = _g1[_g];
+			++_g;
+			var _g2 = c.type;
+			switch(_g2._hx_index) {
+			case 0:
+				if(id == null) {
+					id = c;
+				}
+				break;
+			case 1:
+				if(c.kind != "localizable") {
+					helpers.push({ c : c, map : null});
+				}
+				break;
+			case 6:
+				var sheet = _g2.sheet;
+				var map = null;
+				var s1 = this.getSheet(sheet);
+				if(s1.props.displayColumn != null) {
+					var idCol = null;
+					var _g3 = 0;
+					var _g11 = s1.columns;
+					while(_g3 < _g11.length) {
+						var c1 = _g11[_g3];
+						++_g3;
+						if(c1.type == cdb_ColumnType.TId) {
+							idCol = c1;
+							break;
+						}
+					}
+					if(idCol != null) {
+						map = new haxe_ds_StringMap();
+						var _g21 = 0;
+						var _g31 = s1.lines;
+						while(_g21 < _g31.length) {
+							var o = _g31[_g21];
+							++_g21;
+							var id1 = Reflect.field(o,idCol.name);
+							var name = Reflect.field(o,s1.props.displayColumn);
+							if(id1 != null && id1 != "" && name != null && name != "") {
+								if(__map_reserved[id1] != null) {
+									map.setReserved(id1,name);
+								} else {
+									map.h[id1] = name;
+								}
+							}
+						}
+					}
+				}
+				helpers.push({ c : c, map : map});
+				break;
+			default:
+			}
+		}
+		if(id != null) {
+			helpers = [];
+		}
+		return { id : id == null ? null : id.name, helpers : helpers};
+	}
+	,buildSheetXml: function(s,tabs,values,locFields,diff) {
+		var inf = this.getSheetHelpers(s);
+		var id = inf.id;
+		var buf_b = "";
+		var index = 0;
+		var _g = 0;
+		while(_g < values.length) {
+			var o = values[_g];
+			++_g;
+			var id1 = id == null ? "" + index++ : Reflect.field(o,id);
+			if(id1 == null || id1 == "") {
+				continue;
+			}
+			var _g1 = [];
+			var _g11 = 0;
+			while(_g11 < locFields.length) {
+				var f = locFields[_g11];
+				++_g11;
+				_g1.push(this.getLocText(tabs,o,f,diff));
+			}
+			var locs = _g1;
+			var hasLoc = false;
+			var _g2 = 0;
+			while(_g2 < locs.length) {
+				var l = locs[_g2];
+				++_g2;
+				if(l.value != null && l.value != "") {
+					hasLoc = true;
+					break;
+				}
+			}
+			if(!hasLoc) {
+				continue;
+			}
+			buf_b += Std.string("" + tabs + "<" + id1);
+			var _g3 = 0;
+			var _g4 = inf.helpers;
+			while(_g3 < _g4.length) {
+				var c = _g4[_g3];
+				++_g3;
+				var hid = Reflect.field(o,c.c.name);
+				if(hid != null) {
+					if(c.map != null) {
+						var _this = c.map;
+						var v = __map_reserved[hid] != null ? _this.getReserved(hid) : _this.h[hid];
+						if(v != null) {
+							hid = v;
+						}
+					}
+					buf_b += Std.string(" " + c.c.name + "=\"" + hid + "\"");
+				}
+			}
+			buf_b += ">\n";
+			var _g5 = 0;
+			while(_g5 < locs.length) {
+				var l1 = locs[_g5];
+				++_g5;
+				if(l1.value != null && l1.value != "") {
+					if(l1.value.indexOf("<") < 0) {
+						buf_b += Std.string("" + tabs + "\t<" + l1.name + ">" + l1.value + "</" + l1.name + ">\n");
+					} else {
+						buf_b += Std.string("" + tabs + "\t<" + l1.name + ">\n");
+						buf_b += Std.string("" + tabs + "\t\t" + StringTools.trim(l1.value) + "\n");
+						buf_b += Std.string("" + tabs + "\t</" + l1.name + ">\n");
+					}
+				}
+			}
+			buf_b += Std.string("" + tabs + "</" + id1 + ">\n");
+		}
+		return buf_b;
+	}
+	,__class__: cdb_Lang
+};
 var cdb_Lz4Reader = function() {
 };
 $hxClasses["cdb.Lz4Reader"] = cdb_Lz4Reader;
@@ -1127,6 +1747,200 @@ cdb_Lz4Reader.prototype = {
 		return out.sub(0,outPos);
 	}
 	,__class__: cdb_Lz4Reader
+};
+var cdb_Parser = function() { };
+$hxClasses["cdb.Parser"] = cdb_Parser;
+cdb_Parser.__name__ = "cdb.Parser";
+cdb_Parser.saveType = function(t) {
+	switch(t._hx_index) {
+	case 5:
+		var values = t.values;
+		return t._hx_index + ":" + values.join(",");
+	case 6:
+		var _g4 = t.sheet;
+		return t._hx_index + ":" + Std.string(Type.enumParameters(t)[0]);
+	case 9:
+		var _g = t.name;
+		return t._hx_index + ":" + Std.string(Type.enumParameters(t)[0]);
+	case 10:
+		var values1 = t.values;
+		return t._hx_index + ":" + values1.join(",");
+	case 12:
+		var _g2 = t.type;
+		return t._hx_index + ":" + Std.string(Type.enumParameters(t)[0]);
+	case 0:case 1:case 2:case 3:case 4:case 7:case 8:case 11:case 13:case 14:case 15:case 16:case 17:
+		if(t._hx_index == null) {
+			return "null";
+		} else {
+			return "" + t._hx_index;
+		}
+		break;
+	}
+};
+cdb_Parser.getType = function(str) {
+	var _g = Std.parseInt(str);
+	if(_g == null) {
+		throw new js__$Boot_HaxeError("Unknown type " + str);
+	} else {
+		switch(_g) {
+		case 0:
+			return cdb_ColumnType.TId;
+		case 1:
+			return cdb_ColumnType.TString;
+		case 2:
+			return cdb_ColumnType.TBool;
+		case 3:
+			return cdb_ColumnType.TInt;
+		case 4:
+			return cdb_ColumnType.TFloat;
+		case 5:
+			return cdb_ColumnType.TEnum(HxOverrides.substr(str,str.indexOf(":") + 1,null).split(","));
+		case 6:
+			return cdb_ColumnType.TRef(HxOverrides.substr(str,str.indexOf(":") + 1,null));
+		case 7:
+			return cdb_ColumnType.TImage;
+		case 8:
+			return cdb_ColumnType.TList;
+		case 9:
+			return cdb_ColumnType.TCustom(HxOverrides.substr(str,str.indexOf(":") + 1,null));
+		case 10:
+			return cdb_ColumnType.TFlags(HxOverrides.substr(str,str.indexOf(":") + 1,null).split(","));
+		case 11:
+			return cdb_ColumnType.TColor;
+		case 12:
+			return cdb_ColumnType.TLayer(HxOverrides.substr(str,str.indexOf(":") + 1,null));
+		case 13:
+			return cdb_ColumnType.TFile;
+		case 14:
+			return cdb_ColumnType.TTilePos;
+		case 15:
+			return cdb_ColumnType.TTileLayer;
+		case 16:
+			return cdb_ColumnType.TDynamic;
+		case 17:
+			return cdb_ColumnType.TProperties;
+		default:
+			throw new js__$Boot_HaxeError("Unknown type " + str);
+		}
+	}
+};
+cdb_Parser.parse = function(content) {
+	if(content == null) {
+		throw new js__$Boot_HaxeError("CDB content is null");
+	}
+	var data = JSON.parse(content);
+	var _g = 0;
+	var _g1 = data.sheets;
+	while(_g < _g1.length) {
+		var s = _g1[_g];
+		++_g;
+		var _g2 = 0;
+		var _g11 = s.columns;
+		while(_g2 < _g11.length) {
+			var c = _g11[_g2];
+			++_g2;
+			c.type = cdb_Parser.getType(c.typeStr);
+			c.typeStr = null;
+		}
+	}
+	var _g21 = 0;
+	var _g3 = data.customTypes;
+	while(_g21 < _g3.length) {
+		var t = _g3[_g21];
+		++_g21;
+		var _g22 = 0;
+		var _g31 = t.cases;
+		while(_g22 < _g31.length) {
+			var c1 = _g31[_g22];
+			++_g22;
+			var _g23 = 0;
+			var _g32 = c1.args;
+			while(_g23 < _g32.length) {
+				var a = _g32[_g23];
+				++_g23;
+				a.type = cdb_Parser.getType(a.typeStr);
+				a.typeStr = null;
+			}
+		}
+	}
+	return data;
+};
+cdb_Parser.save = function(data) {
+	var save = [];
+	var _g = 0;
+	var _g1 = data.sheets;
+	while(_g < _g1.length) {
+		var s = _g1[_g];
+		++_g;
+		var _g2 = 0;
+		var _g11 = s.columns;
+		while(_g2 < _g11.length) {
+			var c = _g11[_g2];
+			++_g2;
+			save.push(c.type);
+			if(c.typeStr == null) {
+				c.typeStr = cdb_Parser.saveType(c.type);
+			}
+			Reflect.deleteField(c,"type");
+		}
+	}
+	var _g21 = 0;
+	var _g3 = data.customTypes;
+	while(_g21 < _g3.length) {
+		var t = _g3[_g21];
+		++_g21;
+		var _g22 = 0;
+		var _g31 = t.cases;
+		while(_g22 < _g31.length) {
+			var c1 = _g31[_g22];
+			++_g22;
+			var _g23 = 0;
+			var _g32 = c1.args;
+			while(_g23 < _g32.length) {
+				var a = _g32[_g23];
+				++_g23;
+				save.push(a.type);
+				if(a.typeStr == null) {
+					a.typeStr = cdb_Parser.saveType(a.type);
+				}
+				Reflect.deleteField(a,"type");
+			}
+		}
+	}
+	var str = JSON.stringify(data,null,"\t");
+	var _g4 = 0;
+	var _g5 = data.sheets;
+	while(_g4 < _g5.length) {
+		var s1 = _g5[_g4];
+		++_g4;
+		var _g41 = 0;
+		var _g51 = s1.columns;
+		while(_g41 < _g51.length) {
+			var c2 = _g51[_g41];
+			++_g41;
+			c2.type = save.shift();
+		}
+	}
+	var _g6 = 0;
+	var _g7 = data.customTypes;
+	while(_g6 < _g7.length) {
+		var t1 = _g7[_g6];
+		++_g6;
+		var _g61 = 0;
+		var _g71 = t1.cases;
+		while(_g61 < _g71.length) {
+			var c3 = _g71[_g61];
+			++_g61;
+			var _g62 = 0;
+			var _g72 = c3.args;
+			while(_g62 < _g72.length) {
+				var a1 = _g72[_g62];
+				++_g62;
+				a1.type = save.shift();
+			}
+		}
+	}
+	return str;
 };
 var cdb_TileBuilder = function(t,stride,total) {
 	this.borders = [];
@@ -2001,6 +2815,81 @@ cdb_IndexId.prototype = $extend(cdb_Index.prototype,{
 	}
 	,__class__: cdb_IndexId
 });
+var dat__$Data_ProjectsKind_$Impl_$ = {};
+$hxClasses["dat._Data.ProjectsKind_Impl_"] = dat__$Data_ProjectsKind_$Impl_$;
+dat__$Data_ProjectsKind_$Impl_$.__name__ = "dat._Data.ProjectsKind_Impl_";
+dat__$Data_ProjectsKind_$Impl_$.toString = function(this1) {
+	return this1;
+};
+var dat__$Data_Projects_$Impl_$ = {};
+$hxClasses["dat._Data.Projects_Impl_"] = dat__$Data_Projects_$Impl_$;
+dat__$Data_Projects_$Impl_$.__name__ = "dat._Data.Projects_Impl_";
+dat__$Data_Projects_$Impl_$.__properties__ = {get_index:"get_index",get_Color:"get_Color",get_Name:"get_Name",get_ID:"get_ID"};
+dat__$Data_Projects_$Impl_$.get_ID = function(this1) {
+	return this1.ID;
+};
+dat__$Data_Projects_$Impl_$.get_Name = function(this1) {
+	return this1.Name;
+};
+dat__$Data_Projects_$Impl_$.get_Color = function(this1) {
+	return this1.Color;
+};
+dat__$Data_Projects_$Impl_$.get_index = function(this1) {
+	return this1.index;
+};
+var dat__$Data_TimeChunk_$Impl_$ = {};
+$hxClasses["dat._Data.TimeChunk_Impl_"] = dat__$Data_TimeChunk_$Impl_$;
+dat__$Data_TimeChunk_$Impl_$.__name__ = "dat._Data.TimeChunk_Impl_";
+dat__$Data_TimeChunk_$Impl_$.__properties__ = {get_IsWeekend:"get_IsWeekend",get_WeekDay:"get_WeekDay",get_Day:"get_Day",get_Month:"get_Month",get_Year:"get_Year",get_WhilePomodoro:"get_WhilePomodoro",get_Length:"get_Length",get_Details:"get_Details",get_ProjectId:"get_ProjectId",get_Project:"get_Project"};
+dat__$Data_TimeChunk_$Impl_$.get_Project = function(this1) {
+	if(this1.Project == null) {
+		return null;
+	} else {
+		return dat_Data.Projects.resolve(this1.Project);
+	}
+};
+dat__$Data_TimeChunk_$Impl_$.get_ProjectId = function(this1) {
+	return this1.Project;
+};
+dat__$Data_TimeChunk_$Impl_$.get_Details = function(this1) {
+	return this1.Details;
+};
+dat__$Data_TimeChunk_$Impl_$.get_Length = function(this1) {
+	return this1.Length;
+};
+dat__$Data_TimeChunk_$Impl_$.get_WhilePomodoro = function(this1) {
+	return this1.WhilePomodoro;
+};
+dat__$Data_TimeChunk_$Impl_$.get_Year = function(this1) {
+	return this1.Year;
+};
+dat__$Data_TimeChunk_$Impl_$.get_Month = function(this1) {
+	return this1.Month;
+};
+dat__$Data_TimeChunk_$Impl_$.get_Day = function(this1) {
+	return this1.Day;
+};
+dat__$Data_TimeChunk_$Impl_$.get_WeekDay = function(this1) {
+	return this1.WeekDay;
+};
+dat__$Data_TimeChunk_$Impl_$.get_IsWeekend = function(this1) {
+	return this1.IsWeekend;
+};
+var dat_Data = function() { };
+$hxClasses["dat.Data"] = dat_Data;
+dat_Data.__name__ = "dat.Data";
+dat_Data.applyLang = function(xml,onMissing) {
+	var c = new cdb_Lang(dat_Data.root);
+	if(onMissing != null) {
+		c.onMissing = onMissing;
+	}
+	return c.apply(xml);
+};
+dat_Data.load = function(content) {
+	dat_Data.root = cdb_Parser.parse(content);
+	dat_Data.Projects = new cdb_IndexId(dat_Data.root,"Projects");
+	dat_Data.TimeChunk = new cdb_Index(dat_Data.root,"TimeChunk");
+};
 var haxe_IMap = function() { };
 $hxClasses["haxe.IMap"] = haxe_IMap;
 haxe_IMap.__name__ = "haxe.IMap";
@@ -6356,10 +7245,10 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 			}
 			break;
 		case 7:
-			var _g = value.l;
-			if(_g.length == 2) {
-				var y = _g[1];
-				var x = _g[0];
+			var _g1 = value.l;
+			if(_g1.length == 2) {
+				var y = _g1[1];
+				var x = _g1[0];
 				return { x : this.parseFloat(x), y : this.parseFloat(y)};
 			} else {
 				var s1 = this.parseFloat(value);
@@ -6430,11 +7319,11 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 				}
 				break;
 			case 7:
-				var _g = v.l;
-				if(_g.length == 3) {
-					var h = _g[2];
-					var w = _g[1];
-					var color = _g[0];
+				var _g13 = v.l;
+				if(_g13.length == 3) {
+					var h = _g13[2];
+					var w = _g13[1];
+					var color = _g13[0];
 					var c1 = this.parseColor(color);
 					var w1 = this.parseInt(w);
 					var h1 = this.parseInt(h);
@@ -6445,16 +7334,16 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 				}
 				break;
 			case 8:
-				var _g5 = v.vl;
+				var _g2 = v.vl;
 				if(v.f == "tile") {
-					switch(_g5.length) {
+					switch(_g2.length) {
 					case 2:
-						var _g7 = _g5[1];
-						var _g6 = _g5[0];
-						if(_g6._hx_index == 1) {
-							if(_g7._hx_index == 4) {
-								var url = _g6.s;
-								var vsplit = _g7.v;
+						var _g4 = _g2[1];
+						var _g3 = _g2[0];
+						if(_g3._hx_index == 1) {
+							if(_g4._hx_index == 4) {
+								var url = _g3.s;
+								var vsplit = _g4.v;
 								var p = this.loadResource(url);
 								var t = p.toTile();
 								return t.sub(0,0,Math.ceil(t.width + t.x) - Math.floor(t.x),(Math.ceil(t.height + t.y) - Math.floor(t.y)) / vsplit | 0);
@@ -6468,15 +7357,15 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 						}
 						break;
 					case 3:
-						var _g12 = _g5[2];
-						var _g11 = _g5[1];
-						var _g10 = _g5[0];
-						if(_g10._hx_index == 1) {
-							if(_g11._hx_index == 4) {
-								if(_g12._hx_index == 4) {
-									var vsplit1 = _g11.v;
-									var url1 = _g10.s;
-									var hsplit = _g12.v;
+						var _g9 = _g2[2];
+						var _g8 = _g2[1];
+						var _g7 = _g2[0];
+						if(_g7._hx_index == 1) {
+							if(_g8._hx_index == 4) {
+								if(_g9._hx_index == 4) {
+									var vsplit1 = _g8.v;
+									var url1 = _g7.s;
+									var hsplit = _g9.v;
 									var p1 = this.loadResource(url1);
 									var t1 = p1.toTile();
 									return t1.sub(0,0,(Math.ceil(t1.width + t1.x) - Math.floor(t1.x)) / hsplit | 0,(Math.ceil(t1.height + t1.y) - Math.floor(t1.y)) / vsplit1 | 0);
@@ -6570,10 +7459,10 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 			}
 			break;
 		case 7:
-			var _g = value.l;
-			if(_g.length == 2) {
-				var v = _g[1];
-				var h = _g[0];
+			var _g1 = value.l;
+			if(_g1.length == 2) {
+				var v = _g1[1];
+				var h = _g1[0];
 				try {
 					return { h : this.parseHAlign(h), v : this.parseVAlign(v)};
 				} catch( e3 ) {
@@ -6663,22 +7552,22 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 			}
 			break;
 		case 7:
-			var _g = value.l;
-			switch(_g.length) {
+			var _g3 = value.l;
+			switch(_g3.length) {
 			case 2:
-				var alpha = _g[1];
-				var color = _g[0];
+				var alpha = _g3[1];
+				var color = _g3[0];
 				var c = this.parseColor(color);
 				var a = this.parseFloat(alpha);
 				return { tile : h2d_Tile.fromColor(c,null,null,a), borderW : 0, borderH : 0};
 			case 3:
-				var _g5 = _g[2];
-				var _g4 = _g[1];
-				if(_g4._hx_index == 4) {
-					if(_g5._hx_index == 4) {
-						var x = _g4.v;
-						var tile = _g[0];
-						var y = _g5.v;
+				var _g8 = _g3[2];
+				var _g7 = _g3[1];
+				if(_g7._hx_index == 4) {
+					if(_g8._hx_index == 4) {
+						var x = _g7.v;
+						var tile = _g3[0];
+						var y = _g8.v;
 						return { tile : this.parseTile(tile), borderW : x, borderH : y};
 					} else {
 						return { tile : this.parseTile(value), borderW : 0, borderH : 0};
@@ -6768,11 +7657,11 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 			}
 			break;
 		case 8:
-			var _g1 = value.vl;
+			var _g2 = value.vl;
 			switch(value.f) {
 			case "brightness":
-				if(_g1.length == 1) {
-					var v = _g1[0];
+				if(_g2.length == 1) {
+					var v = _g2[0];
 					var v1 = this.parseFloatPercent(v);
 					var f = new h2d_filter_ColorMatrix();
 					f.pass.shader.matrix__.colorLightness(v1);
@@ -6782,11 +7671,11 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 				}
 				break;
 			case "grayscale":
-				switch(_g1.length) {
+				switch(_g2.length) {
 				case 0:
 					return h2d_filter_ColorMatrix.grayed();
 				case 1:
-					var v2 = _g1[0];
+					var v2 = _g2[0];
 					var v3 = this.parseFloatPercent(v2);
 					var f1 = new h2d_filter_ColorMatrix();
 					f1.pass.shader.matrix__.colorSaturate(-v3);
@@ -6796,9 +7685,9 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 				}
 				break;
 			case "outline":
-				if(_g1.length == 2) {
-					var c = _g1[1];
-					var s = _g1[0];
+				if(_g2.length == 2) {
+					var c = _g2[1];
+					var s = _g2[0];
 					var s1 = this.parseFloat(s);
 					var c1 = this.parseColor(c);
 					return new h2d_filter_Outline(s1,c1);
@@ -6807,8 +7696,8 @@ h2d_domkit_CustomParser.prototype = $extend(domkit_ValueParser.prototype,{
 				}
 				break;
 			case "saturate":
-				if(_g1.length == 1) {
-					var v4 = _g1[0];
+				if(_g2.length == 1) {
+					var v4 = _g2[0];
 					var v5 = this.parseFloatPercent(v4);
 					var f2 = new h2d_filter_ColorMatrix();
 					f2.pass.shader.matrix__.colorSaturate(v5);
@@ -58253,6 +59142,22 @@ haxe_MainLoop.tick = function() {
 var haxe_Resource = function() { };
 $hxClasses["haxe.Resource"] = haxe_Resource;
 haxe_Resource.__name__ = "haxe.Resource";
+haxe_Resource.getString = function(name) {
+	var _g = 0;
+	var _g1 = haxe_Resource.content;
+	while(_g < _g1.length) {
+		var x = _g1[_g];
+		++_g;
+		if(x.name == name) {
+			if(x.str != null) {
+				return x.str;
+			}
+			var b = haxe_crypto_Base64.decode(x.data);
+			return b.toString();
+		}
+	}
+	return null;
+};
 haxe_Resource.getBytes = function(name) {
 	var _g = 0;
 	var _g1 = haxe_Resource.content;
@@ -59901,6 +60806,22 @@ $hxClasses["haxe.xml._Access.HasNodeAccess_Impl_"] = haxe_xml__$Access_HasNodeAc
 haxe_xml__$Access_HasNodeAccess_$Impl_$.__name__ = "haxe.xml._Access.HasNodeAccess_Impl_";
 haxe_xml__$Access_HasNodeAccess_$Impl_$.resolve = function(this1,name) {
 	return this1.elementsNamed(name).hasNext();
+};
+var haxe_xml__$Access_Access_$Impl_$ = {};
+$hxClasses["haxe.xml._Access.Access_Impl_"] = haxe_xml__$Access_Access_$Impl_$;
+haxe_xml__$Access_Access_$Impl_$.__name__ = "haxe.xml._Access.Access_Impl_";
+haxe_xml__$Access_Access_$Impl_$.__properties__ = {get_innerHTML:"get_innerHTML"};
+haxe_xml__$Access_Access_$Impl_$.get_innerHTML = function(this1) {
+	var s_b = "";
+	if(this1.nodeType != Xml.Document && this1.nodeType != Xml.Element) {
+		throw new js__$Boot_HaxeError("Bad node type, expected Element or Document but found " + _$Xml_XmlType_$Impl_$.toString(this1.nodeType));
+	}
+	var x = HxOverrides.iter(this1.children);
+	while(x.hasNext()) {
+		var x1 = x.next();
+		s_b += Std.string(haxe_xml_Printer.print(x1));
+	}
+	return s_b;
 };
 var haxe_xml_XmlParserException = function(message,xml,position) {
 	this.xml = xml;
@@ -87911,6 +88832,14 @@ cdb__$Data_TileMode_$Impl_$.Ground = "ground";
 cdb__$Data_TileMode_$Impl_$.Border = "border";
 cdb__$Data_TileMode_$Impl_$.Object = "object";
 cdb__$Data_TileMode_$Impl_$.Group = "group";
+dat__$Data_ProjectsKind_$Impl_$.tdad = "tdad";
+dat__$Data_ProjectsKind_$Impl_$.artfx = "artfx";
+dat__$Data_ProjectsKind_$Impl_$.livre_prog_jv = "livre_prog_jv";
+dat__$Data_ProjectsKind_$Impl_$.youtube_prog_jv = "youtube_prog_jv";
+dat__$Data_ProjectsKind_$Impl_$.web = "web";
+dat__$Data_ProjectsKind_$Impl_$.home = "home";
+dat__$Data_ProjectsKind_$Impl_$.tools = "tools";
+dat__$Data_ProjectsKind_$Impl_$.lire = "lire";
 domkit_Component.COMPONENTS = new haxe_ds_StringMap();
 domkit_Properties.KEEP_VALUES = false;
 domkit_Properties.pclass = domkit_Property.get("class");
