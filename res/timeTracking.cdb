@@ -1,0 +1,131 @@
+{
+	"sheets": [
+		{
+			"name": "Projects",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "ID",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "Name",
+					"display": null
+				},
+				{
+					"typeStr": "11",
+					"name": "Color",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"Name": "Tower of Lost souls",
+					"Color": 65490,
+					"index": 0,
+					"ID": "tdad"
+				},
+				{
+					"Name": "ArtFX",
+					"Color": 5504768,
+					"index": 1,
+					"ID": "artfx"
+				},
+				{
+					"Name": "Programmer des Jeux Vidéo",
+					"Color": 13893632,
+					"index": 2,
+					"ID": "livre_prog_jv"
+				},
+				{
+					"Name": "Vidéos Youtube Programmer des Jeux Vidéo",
+					"Color": 16711680,
+					"index": 3,
+					"ID": "youtube_prog_jv"
+				},
+				{
+					"Name": "Trainer sur le web",
+					"Color": 5251562,
+					"index": 4,
+					"ID": "web"
+				},
+				{
+					"Name": "Maison",
+					"Color": 16769280,
+					"index": 5,
+					"ID": "home"
+				},
+				{
+					"ID": "tools",
+					"Name": "Outils informatiques",
+					"Color": 43901,
+					"index": 6
+				},
+				{
+					"ID": "lire",
+					"Name": "Lire",
+					"Color": 16754944,
+					"index": 7
+				}
+			],
+			"separators": [],
+			"props": {
+				"hasIndex": true
+			}
+		},
+		{
+			"name": "TimeChunk",
+			"columns": [
+				{
+					"typeStr": "6:Projects",
+					"name": "Project",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "Details",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "Length"
+				},
+				{
+					"typeStr": "2",
+					"name": "WhilePomodoro"
+				},
+				{
+					"typeStr": "3",
+					"name": "Year",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "Month",
+					"display": null
+				},
+				{
+					"typeStr": "3",
+					"name": "Day",
+					"display": null
+				},
+				{
+					"typeStr": "1",
+					"name": "WeekDay",
+					"display": null
+				},
+				{
+					"typeStr": "2",
+					"name": "IsWeekend",
+					"display": null
+				}
+			],
+			"lines": [],
+			"separators": [],
+			"props": {}
+		}
+	],
+	"customTypes": [],
+	"compress": false
+}

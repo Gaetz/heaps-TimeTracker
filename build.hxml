@@ -1,0 +1,4 @@
+-lib heaps
+-js bin/timeTracker.js
+-main Main
+-debug
