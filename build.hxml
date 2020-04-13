@@ -1,4 +1,9 @@
--lib heaps
 -js bin/timeTracker.js
+-lib heaps
+-lib castle
+-cp src
+
 -main Main
+-resource db/timeTracking.cdb
+
 -debug

@@ -1,2 +1,2 @@
 # heaps-TimeTracker
-Time tracking tool
+Time tracking tool using heaps and castleDB
