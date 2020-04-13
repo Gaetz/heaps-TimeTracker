@@ -22,7 +22,7 @@ class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 			</layoutCol>
 		</layoutLine>
 
-		<layoutLine(200)>
+		<layoutLine(220)>
 			<layoutCol(align)>
 				<view(align,[]) id="view"/>
 				<text text="blop" />
@@ -39,12 +39,25 @@ class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 			</layoutCol>
 		</layoutLine>
 
-		<layoutLine(100)>
-			<title("Today", font) />
-			<button public id="btn1" />
-			<button public id="btn2" />
-			<text text="blop" />
-			<text text="blop" />
+		<layoutLine(90)>
+			<layoutCol(align)>
+				<title("Today", font) />
+			</layoutCol>
+
+			<layoutCol(align)>
+				<layoutLine(20) class="smallLine">
+					<button public id="checkPomodoro" class="checkbox" />
+					<text text="Pomorodo" />
+					<button public id="checkRing" class="checkbox" />
+					<text text="Ring" />
+				</layoutLine>
+				<button public id="start" class="start" />
+			</layoutCol>
+
+			<layoutCol(align)>
+				<title("", font) public id="time" />
+				<text text="Cumulated_6.2" />
+			</layoutCol>
 		</layoutLine>
 
 	</container>;

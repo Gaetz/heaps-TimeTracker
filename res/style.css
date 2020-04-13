@@ -20,6 +20,10 @@ layoutLine {
 	margin-bottom:10;
 }
 
+layoutLine.smallLine {
+	padding: 0;
+}
+
 layoutLine.titleLine {
 	align: center top;
 }
@@ -61,8 +65,19 @@ button {
 	height: 30;
 }
 
+button.checkbox {
+	background: #333;
+	height: 15;
+	width: 15;
+}
+
 button.highlight {
 	background: #a33;
+}
+
+button.start {
+	height: 50;
+	width: 250;
 }
 
 button text {

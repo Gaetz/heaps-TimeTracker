@@ -1,4 +1,7 @@
 
+import h2d.Tile;
+import h2d.Text;
+import h2d.Dropdown;
 import dat.Data;
 import hxd.Res;
 import ui.*;
@@ -12,6 +15,8 @@ class Main extends hxd.App {
 	public static var titleFont: h2d.Font;
 	public static var subtitleFont: h2d.Font;
 	public static var textFont: h2d.Font;
+
+	var dropdown:Dropdown;
 
     override function init() {
         //var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
@@ -46,9 +51,13 @@ class Main extends hxd.App {
 		// Override
 		//root.date.text.font = titleFont;
 		root.btn.label = "Button";
+		root.date.label = formatedDate;
+		root.start.minWidth = 250;
+		root.start.label = "Start";
+
+		/*
 		root.btn1.label = "Highlight ON";
 		root.btn2.label = "Highlight OFF";
-		root.date.label = formatedDate;
 
 		root.btn1.onClick = function() {
 			root.btn.dom.addClass("highlight");
@@ -56,6 +65,27 @@ class Main extends hxd.App {
 		root.btn2.onClick = function() {
 			root.btn.dom.removeClass("highlight");
 		}
+		*/
+
+		var text0 = new Text(textFont, s2d);
+		text0.text = "Blip";
+		var text1 = new Text(textFont, s2d);
+		text1.text = "Blap";
+		var text2 = new Text(textFont, s2d);
+		text2.text = "Blop";
+		var text3 = new Text(textFont, s2d);
+		text3.text = "Bloup";
+
+		dropdown = new Dropdown(s2d);
+		dropdown.addItem(text0);
+		dropdown.addItem(text2);
+		dropdown.addItem(text3);
+		dropdown.addItem(text1);
+		dropdown.backgroundTile = Tile.fromColor(0x000000);
+
+		dropdown.x = 400;
+		dropdown.y = 340;
+		dropdown.minWidth = 127;
 	}
 
 	function initStyle() {
