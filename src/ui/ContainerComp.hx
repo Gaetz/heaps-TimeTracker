@@ -24,7 +24,7 @@ class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 
 		<layoutLine(220)>
 			<layoutCol(align)>
-				<view(align,[]) id="view"/>
+				<bar(align) id="view"/>
 				<text text="blop" />
 			</layoutCol>
 

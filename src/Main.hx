@@ -2,10 +2,10 @@
 import h2d.Tile;
 import h2d.Text;
 import h2d.Dropdown;
+import h2d.Font;
 import dat.Data;
 import hxd.Res;
 import ui.*;
-import h2d.Font;
 
 class Main extends hxd.App {
 
@@ -27,6 +27,7 @@ class Main extends hxd.App {
 
 		initUI();
 		initStyle();
+		initData();
 	}
 	
 	/**
@@ -67,25 +68,12 @@ class Main extends hxd.App {
 		}
 		*/
 
-		var text0 = new Text(textFont, s2d);
-		text0.text = "Blip";
-		var text1 = new Text(textFont, s2d);
-		text1.text = "Blap";
-		var text2 = new Text(textFont, s2d);
-		text2.text = "Blop";
-		var text3 = new Text(textFont, s2d);
-		text3.text = "Bloup";
-
 		dropdown = new Dropdown(s2d);
-		dropdown.addItem(text0);
-		dropdown.addItem(text2);
-		dropdown.addItem(text3);
-		dropdown.addItem(text1);
 		dropdown.backgroundTile = Tile.fromColor(0x000000);
-
 		dropdown.x = 400;
 		dropdown.y = 340;
 		dropdown.minWidth = 127;
+		dropdown.maxWidth = 127;
 	}
 
 	function initStyle() {
@@ -93,6 +81,19 @@ class Main extends hxd.App {
 		style.load(Res.style);
 		style.addObject(root);
 	}
+
+	function initData() {
+		initDropDown();
+	}
+
+	function initDropDown() {
+		Lambda.iter(Data.Projects.all, p -> { 
+			var t = new Text(textFont, s2d);
+			t.text = p.Name;
+			dropdown.addItem(t);
+		});
+	}
+
 
 	override function onResize() {
 		center.minWidth = center.maxWidth = s2d.width;
