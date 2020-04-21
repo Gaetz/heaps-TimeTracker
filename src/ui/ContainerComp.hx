@@ -23,19 +23,17 @@ class ContainerComp extends h2d.Flow implements h2d.domkit.Object {
 		</layoutLine>
 
 		<layoutLine(220)>
-			<layoutCol(align)>
-				<bar(align) id="view"/>
-				<text text="blop" />
+			<layoutCol(align) class="time">
+				<title("This week", Main.subtitleFont)/>
 			</layoutCol>
 
-			<layoutCol(align)>
-				<button public id="btn" />
-				<text text="blop" />
+			<layoutCol(align) class="time">
+				<title("Last week", Main.subtitleFont)/>
+
 			</layoutCol>
 
-			<layoutCol(align)>
-				<text text="blop" />
-				<text text="blop" />
+			<layoutCol(align) class="time">
+				<title("Overall", Main.subtitleFont)/>
 			</layoutCol>
 		</layoutLine>
 

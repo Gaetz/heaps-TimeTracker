@@ -33,6 +33,24 @@ layoutCol {
 	layout: vertical;
 }
 
+layoutCol.time {
+	align: left top;
+}
+
+layoutCol.subcol {
+	width: 200;
+	align: left top;
+	padding: 0;
+	margin: 0 0 0 0;
+}
+
+layoutCol.timesubcol {
+	width: 100;
+	align: left top;
+	padding: 0;
+	margin: 0 0 0 0;
+}
+
 bitmapTitle {
 	width: 380;
 	align: center bottom;

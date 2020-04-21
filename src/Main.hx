@@ -17,6 +17,7 @@ class Main extends hxd.App {
 	public static var textFont: h2d.Font;
 
 	var dropdown:Dropdown;
+	var weekHistogram:Histogram;
 
     override function init() {
         //var tf = new h2d.Text(hxd.res.DefaultFont.get(), s2d);
@@ -51,7 +52,7 @@ class Main extends hxd.App {
 
 		// Override
 		//root.date.text.font = titleFont;
-		root.btn.label = "Button";
+		//root.btn.label = "Button";
 		root.date.label = formatedDate;
 		root.start.minWidth = 250;
 		root.start.label = "Start";
@@ -74,6 +75,11 @@ class Main extends hxd.App {
 		dropdown.y = 340;
 		dropdown.minWidth = 127;
 		dropdown.maxWidth = 127;
+
+		weekHistogram = new Histogram(ThisWeek, 10, 150, s2d);
+		weekHistogram = new Histogram(LastWeek, 275, 150, s2d);
+		weekHistogram = new Histogram(Overall, 545, 150, s2d);
+
 	}
 
 	function initStyle() {
@@ -84,6 +90,8 @@ class Main extends hxd.App {
 
 	function initData() {
 		initDropDown();
+
+		//root.view.hours = 6.2;
 	}
 
 	function initDropDown() {

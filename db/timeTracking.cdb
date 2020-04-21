@@ -21,52 +21,34 @@
 			],
 			"lines": [
 				{
-					"Name": "Tower of Lost Souls",
-					"Color": 65490,
-					"index": 0,
-					"ID": "tdad"
-				},
-				{
 					"Name": "ArtFX",
-					"Color": 5504768,
-					"index": 1,
+					"Color": 969227,
+					"index": 0,
 					"ID": "artfx"
 				},
 				{
-					"Name": "Programmer des Jeux Vidéo",
-					"Color": 13893632,
+					"Name": "Gamedev",
+					"Color": 12648705,
+					"index": 1,
+					"ID": "gamedev"
+				},
+				{
+					"Name": "Youtube",
+					"Color": 16728832,
 					"index": 2,
-					"ID": "livre_prog_jv"
-				},
-				{
-					"Name": "Vidéos Youtube Programmer des Jeux Vidéo",
-					"Color": 16711680,
-					"index": 3,
-					"ID": "youtube_prog_jv"
-				},
-				{
-					"Name": "Trainer sur le web",
-					"Color": 5251562,
-					"index": 4,
-					"ID": "web"
-				},
-				{
-					"Name": "Maison",
-					"Color": 16769280,
-					"index": 5,
-					"ID": "home"
-				},
-				{
-					"ID": "tools",
-					"Name": "Outils informatiques",
-					"Color": 43901,
-					"index": 6
+					"ID": "youtube"
 				},
 				{
 					"ID": "lire",
 					"Name": "Lire",
-					"Color": 16754944,
-					"index": 7
+					"Color": 15780096,
+					"index": 3
+				},
+				{
+					"Name": "Proto",
+					"Color": 16714412,
+					"index": 4,
+					"ID": "proto"
 				}
 			],
 			"separators": [],
@@ -83,17 +65,8 @@
 					"display": null
 				},
 				{
-					"typeStr": "1",
-					"name": "Details",
-					"display": null
-				},
-				{
-					"typeStr": "3",
-					"name": "Length"
-				},
-				{
-					"typeStr": "2",
-					"name": "WhilePomodoro"
+					"typeStr": "4",
+					"name": "Duration"
 				},
 				{
 					"typeStr": "3",
@@ -116,9 +89,8 @@
 					"display": null
 				},
 				{
-					"typeStr": "2",
-					"name": "IsWeekend",
-					"display": null
+					"typeStr": "3",
+					"name": "WeekNumber"
 				}
 			],
 			"lines": [],
