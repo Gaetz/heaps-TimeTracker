@@ -1,2 +1,0 @@
-C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\build\src\engine\Debug\engine.pdb
-C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\build\src\engine\engine.dir\Debug\engine.pdb

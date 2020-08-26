@@ -1,8 +1,8 @@
 #include <string>
 
-#include "Timer.h"
-#include "Window.h"
-#include "Game.h"
+#include "engine/Timer.h"
+#include "engine/Game.h"
+#include "engine/Log.h"
 
 LogConfig LOG_CONFIG = {};
 
@@ -18,9 +18,8 @@ extern "C" { int AmdPowerXpressRequestHighPerformance = 1; }
 
 int main(int argc, char *argv[])
 {
-	const std::string title = "OpenGL";
-	const int SCREEN_WIDTH = 1280;
-	const int SCREEN_HEIGHT = 720;
+	const int SCREEN_WIDTH = 1080;
+	const int SCREEN_HEIGHT = 600;
 
 	// Init logging
 	LOG_CONFIG.reporting_level = Debug;
@@ -31,15 +30,6 @@ int main(int argc, char *argv[])
 
 	// Delta time in milliseconds
 	unsigned int dt;
-
-	// Main game elements loading
-	auto window(IWindow::create(title));
-	if(!window->init(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, false))
-	{
-		return 1;
-	}
-	window->logGlParams();
-	
 	Game game;
 	game.init(SCREEN_WIDTH, SCREEN_HEIGHT);
 	game.load();
@@ -49,14 +39,10 @@ int main(int argc, char *argv[])
 	// Game loop
 	while (game.isRunning) {
 		dt = timer.computeDeltaTime();
-		window->updateFpsCounter(dt);
 
 		game.handleInputs();
 		game.update(dt);
-
-		window->clear();
 		game.render();
-		window->swapBuffer();
 
 		// Delay frame if game runs too fast
 		timer.delayTime();
@@ -64,6 +50,5 @@ int main(int argc, char *argv[])
 
 	// Exit game
 	game.clean();
-	window->clean();
 	return 0;
 }

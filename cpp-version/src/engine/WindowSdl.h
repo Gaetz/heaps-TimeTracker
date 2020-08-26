@@ -1,5 +1,7 @@
 #ifndef WINDOW_SDL_H
 #define WINDOW_SDL_H
+#include <string>
+#include <memory>
 
 #ifdef __linux__
 #include <SDL2/SDL.h>
@@ -7,13 +9,6 @@
 #include <SDL.h>
 #endif
 
-#include <GL/glew.h>
-
-#include "Window.h"
-
-extern const float SCREEN_WIDTH;
-extern const float SCREEN_HEIGHT;
-extern LogConfig LOG_CONFIG;
 
 // Used by SDL_Window unique pointer
 struct SdlWindowDestroyer
@@ -27,44 +22,33 @@ struct SdlWindowDestroyer
 // Manage game's window and drawing in this window.
 // The window title bar gives some info, as game's title
 // or FPS counter.
-class WindowSdl : public IWindow
+class WindowSdl
 {
 public:
-    WindowSdl(const std::string &title);
+    WindowSdl(const std::string& title);
     virtual ~WindowSdl();
 
-    bool init(int xPos, int yPos, int width, int height, bool isFullscreen) override;
-    void logGlParams() override;
-    //bool should_close();
-    //void handle_close();
-    void updateFpsCounter(long dt) override;
-    void clear() override;
-    void swapBuffer() override;
-    void clean() override;
+    bool initialize(int xPos, int yPos, int width, int height, bool isFullscreen, const std::string& titleP);
+    void logGlParams();
+    void updateFpsCounter(long dt);
+    void swapBuffer();
+    void clean();
+
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
 
 private:
-    std::unique_ptr<SDL_Window, SdlWindowDestroyer> window;
+    //std::unique_ptr<SDL_Window, SdlWindowDestroyer> window;
+    SDL_Window* window;
     SDL_GLContext context;
-    const std::string &title;
+    std::string title;
+
+    int width;
+    int height;
 
     double previousSeconds;
     double currentSeconds;
     int frameCount;
-
-    /*
-    void debugGlErrorCallback(  GLenum        source,
-                                GLenum        type,
-                                GLuint        id,
-                                GLenum        severity,
-                                GLsizei       length,
-                                const GLchar* message,
-                                GLvoid*       userParam);
-
-    const char* debugGlSeverityToStr(GLenum severity);
-    const char* debugGlTypeToStr(GLenum type);
-    const char* debugGlSourceToStr(GLenum source);
-    */
-
 
     WindowSdl();
     WindowSdl(const WindowSdl &);

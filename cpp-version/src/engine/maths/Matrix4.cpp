@@ -8,7 +8,7 @@ static float m4Ident[4][4] =
 	{ 0.0f, 0.0f, 0.0f, 1.0f }
 };
 
-const Matrix4 Matrix4::identity(m4Ident);
+const Matrix4 Matrix4::identity{m4Ident};
 
 void Matrix4::invert()
 {

@@ -8,7 +8,7 @@
             "name": "(Windows) Lancer",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\build\\Debug\\OpenGLTraining.exe",
+            "program": "${workspaceFolder}\\build\\Debug\\TimeTracker.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

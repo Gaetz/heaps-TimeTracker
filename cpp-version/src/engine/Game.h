@@ -12,8 +12,9 @@
 #include <memory>
 #include "InputManager.h"
 #include "Shader.h"
+#include "RendererOGL.h"
+#include "WindowSdl.h"
 
-using std::vector;
 using std::unique_ptr;
 
 class Scene;
@@ -43,8 +44,10 @@ public:
 	int windowWidth, windowHeight;
 
 private:
+	WindowSdl window;
+	RendererOGL renderer;
 	InputManager inputManager;
-	vector<unique_ptr<Scene>> gameStates;
+	std::vector<unique_ptr<Scene>> gameStates;
 };
 
 #endif

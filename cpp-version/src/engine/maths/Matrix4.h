@@ -1,7 +1,6 @@
 #ifndef MATHS_MATRIX4_H
 #define MATHS_MATRIX4_H
 
-#include <memory.h>
 #include "Vector3.h"
 #include "Quaternion.h"
 
@@ -10,6 +9,7 @@ class Matrix4
 {
 public:
 	float mat[4][4];
+	static const Matrix4 identity;
 
 	Matrix4()
 	{
@@ -19,7 +19,6 @@ public:
 	explicit Matrix4(float inMat[4][4])
 	{
 		memcpy(mat, inMat, 16 * sizeof(float));
-
 	}
 
 	// Cast to a const float pointer
@@ -306,10 +305,10 @@ public:
 	{
 		float temp[4][4] =
 		{
-			{ 1.0f / width, 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 1.0f / height, 0.0f, 0.0f },
-			{ 0.0f, 0.0f, -2.0f / (far - near), 0.0f },
-			{ 0.0f, 0.0f, (far + near) / (near - far), 1.0f }
+			{ 2.0f / width, 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 2.0f / height, 0.0f, 0.0f },
+			{ 0.0f, 0.0f, 1.0f / (far - near), 0.0f },
+			{ 0.0f, 0.0f, near / (near - far), 1.0f }
 		};
 		return Matrix4(temp);
 	}
@@ -327,20 +326,6 @@ public:
 		};
 		return Matrix4(temp);
 	}
-
-	static Matrix4 createPerspective(float left, float right, float bottom, float top, float near, float far)
-	{
-		float temp[4][4] =
-		{
-			{ 2 * near / (right - left), 0.0f, 0.0f, 0.0f },
-			{ 0.0f, 2 * near / (top - bottom), 0.0f, 0.0f },
-			{ (right + left) / (right - left), (top + bottom) / (top - bottom), (far + near) / (near - far), -1.0f },
-			{ 0.0f, 0.0f, 2 * near * far / (near - far), 0.0f }
-		};
-		return Matrix4(temp);
-	}
-
-	static const Matrix4 identity;
 };
 
 #endif

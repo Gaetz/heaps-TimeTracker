@@ -1,22 +1,26 @@
 #include "WindowSdl.h"
-#include "GlDebug.hpp"
+#include "Log.h"
+#include <GL/glew.h>
+using std::string;
 
 WindowSdl::WindowSdl(const std::string &title) : title(title),
                                                  previousSeconds(0),
                                                  currentSeconds(0),
                                                  frameCount(0),
-                                                 context(nullptr)
+                                                 context(nullptr), 
+                                                 window(nullptr)
 {
 }
 
 WindowSdl::~WindowSdl()
 {
-    SDL_Quit();
-    LOG(Info) << "Bye :)";
+        LOG(Info) << "Bye :)";
 }
 
-bool WindowSdl::init(int xPos, int yPos, int width, int height, bool isFullscreen)
+bool WindowSdl::initialize(int xPos, int yPos, int width, int height, bool isFullscreen, const string& titleP)
 {
+    title = titleP;
+
     int flags = SDL_WINDOW_OPENGL;
     if (isFullscreen)
     {
@@ -26,18 +30,8 @@ bool WindowSdl::init(int xPos, int yPos, int width, int height, bool isFullscree
     if (SDL_Init(SDL_INIT_EVERYTHING) == 0) {
         LOG(Info) << "Subsystems initialised";
 
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
-
-        SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-        SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
-
         // WindowSdl
-        window = std::unique_ptr<SDL_Window, SdlWindowDestroyer>(
-                SDL_CreateWindow(title.c_str(), xPos, yPos, width, height, flags));
+        window = SDL_CreateWindow(title.c_str(), xPos, yPos, width, height, flags);
         if (window)
         {
             LOG(Info) << "WindowSdl initialised";
@@ -46,7 +40,7 @@ bool WindowSdl::init(int xPos, int yPos, int width, int height, bool isFullscree
             return false;
 
         // OpenGL context
-        context = SDL_GL_CreateContext(window.get());
+        context = SDL_GL_CreateContext(window);
         if (context)
         {
             LOG(Info) << "OpenGL Context initialised";
@@ -54,36 +48,6 @@ bool WindowSdl::init(int xPos, int yPos, int width, int height, bool isFullscree
         else
             return false;
 
-        // OpenGL setup
-        glewExperimental = GL_TRUE;
-        GLenum initGLEW(glewInit());
-        if (initGLEW == GLEW_OK)
-        {
-            LOG(Info) << "GLEW initialised";
-        }
-        else
-            return false;
-
-        
-        // Get graphics info
-        const GLubyte *renderer = glGetString(GL_RENDERER);
-        const GLubyte *version = glGetString(GL_VERSION);
-        LOG(Info) << "Renderer: " << renderer;
-        LOG(Info) << "OpenGL version supported " << version;
-
-        glViewport(0, 0, width, height);
-        //glEnable(GL_BLEND);
-        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        if (glDebugMessageControlARB != nullptr) {
-            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-            glDebugMessageCallback((GLDEBUGPROCARB) debugGlErrorCallback, nullptr);
-            GLuint unusedIds = 0;
-            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, &unusedIds, GL_TRUE);
-        }
-
-        // Window color
-        glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
         return true;
     }
     else
@@ -161,36 +125,19 @@ void WindowSdl::updateFpsCounter(long dt)
 #else
         sprintf_s(tmp, "%s @ fps: %.2f", title.c_str(), fps);
 #endif
-        SDL_SetWindowTitle(window.get(), tmp);
+        SDL_SetWindowTitle(window, tmp);
         frameCount = 0;
     }
     frameCount++;
 }
 
-void WindowSdl::clear()
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-
 void WindowSdl::swapBuffer()
 {
-    // Check OpenGL error
-    GLenum err;
-    while ((err = glGetError()) != GL_NO_ERROR)
-    {
-        LOG(Error) << "OpenGL error: " << err;
-    }
-
-    SDL_GL_SwapWindow(window.get());
+    SDL_GL_SwapWindow(window);
 }
 
 void WindowSdl::clean()
 {
     // SDL_DestroyWindow(window); Handled by unique_ptr
     SDL_GL_DeleteContext(context);
-}
-
-std::unique_ptr<IWindow> IWindow::create(const std::string &title)
-{
-    return std::make_unique<WindowSdl>(title);
 }

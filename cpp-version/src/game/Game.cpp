@@ -6,15 +6,22 @@
 
 Game::Game() : isRunning(false),
                windowWidth(0),
-               windowHeight(0) {
+               windowHeight(0),
+               window("Time Tracker") 
+{
 }
 
-Game::~Game() {
+Game::~Game() 
+{
+    SDL_Quit();
 }
 
 void Game::init(int screenWidth, int screenHeight) {
     windowWidth = screenWidth;
     windowHeight = screenHeight;
+    bool isWindowInit = window.initialize(SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, false, "Time Tracker");
+    window.logGlParams();
+	bool isRendererInit = renderer.initialize(window);
     isRunning = true;
 }
 
@@ -31,15 +38,20 @@ void Game::handleInputs() {
 }
 
 void Game::update(unsigned int dt) {
+    window.updateFpsCounter(dt);
     gameStates.back()->update(dt);
 }
 
 void Game::render() {
+    renderer.beginDraw();
     gameStates.back()->draw();
+    renderer.endDraw();
+    window.swapBuffer();
 }
 
 void Game::clean() {
     Assets::clear();
+    window.clean();
 }
 
 void Game::changeState(unique_ptr<Scene> state) {
