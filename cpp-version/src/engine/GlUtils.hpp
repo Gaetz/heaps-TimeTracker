@@ -1,3 +1,6 @@
+#ifndef GL_UTILS_H
+#define GL_UTILS_H
+
 // Check if extension is supported
 int isExtensionSupported(const char* extname)
 {
@@ -23,3 +26,5 @@ GL3WglProc getProcAddress(const char * funcname)
 {
     return gl3wGetProcAddress(funcname);
 }
+
+#endif
