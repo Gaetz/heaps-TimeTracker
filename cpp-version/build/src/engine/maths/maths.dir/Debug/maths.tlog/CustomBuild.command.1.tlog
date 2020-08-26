@@ -1,0 +1,10 @@
+^C:\GAMEDEV\HAXE\HEAPS-TIMETRACKER\CPP-VERSION\SRC\ENGINE\MATHS\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Gamedev/Haxe/heaps-TimeTracker/cpp-version -BC:/Gamedev/Haxe/heaps-TimeTracker/cpp-version/build --check-stamp-file C:/Gamedev/Haxe/heaps-TimeTracker/cpp-version/build/src/engine/maths/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

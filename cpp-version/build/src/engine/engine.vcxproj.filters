@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Assets.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Input_KeyboardState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Input_MouseState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\Timer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\WindowSdl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Gamedev\Haxe\heaps-TimeTracker\cpp-version\src\engine\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{9809C7FB-830F-3863-A654-061A3AA32248}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
